@@ -1,0 +1,22 @@
+Glavni grad Rusije je?#Moskva
+Glavni grad Ukrajine je?#Kijev
+Glavni grad Njemačke je?#Berlin
+Glavni grad Kine je?#Peking
+Glavni grad SAD-a je?#Vošington
+Glavni grad UK-a je?#London
+Glavni grad Italije je?#Rim
+Glavni grad Hrvatske je?#Zagreb
+Glavni grad Srbije je?#Beograd
+Glavni grad CG je?#Podgorica
+Korona virus je prvi put otkriven koje godine?#2019#2020#2018#2021#2019
+Kompanija Pfizer je iz koje države?#Njemačke#Kine#SAD#Rusije#SAD
+Kompanija Volkswagen (VW) je iz koje države?#Njemačke#Kine#SAD#Rusije#Njemačke
+Kompanija Microsoft je iz koje države?#Njemačke#Kine#SAD#Rusije#SAD
+Kompanija Opel je iz koje države?#Njemačke#Kine#SAD#Rusije#Njemačke
+Najprodavaniji model kompanije Opel je?#Insignia#Astra#Corsa#Mokka#Corsa
+Najprodavaniji model kompanije VW je?#Golf#Polo#Passat#Jetta#Golf
+Najprodavaniji model kompanije Mercedes-Benz je?#A klasa#B klasa#C klasa#S klasa#C klasa
+Najprodavaniji model kompanije Audi je?#A5#Q8#RS3#TT#A5
+Najprodavaniji model kompanije Porsche je?#Cayenne#Taycan#911 Carrera#Boxster#Cayenne
+
+
