@@ -65,23 +65,12 @@ public class Constants
 
     public static final String PASSWORD_FILE = "." + PATH_SEPARATOR + "password.txt";
 
-    public static final SecretKey SampleAesKey = new SecretKeySpec(Hex.decode("000102030405060708090a0b0c0d0e0f"), "AES");
+    public static final String STORE_PATH = "." + PATH_SEPARATOR + "BCFKS.store";
 
-    public static final SecretKey SampleTripleDesKey = new SecretKeySpec(Hex.decode("000102030405060708090a0b0c0d0e0f1011121314151617"), "TripleDES");
+    public static final String KEY_STORE_PASSWORD = "password";
 
-    public static final SecretKey SampleHMacKey = new SecretKeySpec(Hex.decode("000102030405060708090a0b0c0d0e0f10111213"), "HmacSHA512");
+    public static final String[] CA_CERT_ALIAS = {"interCAA", "interCAB"};
 
-    public static final byte[] SampleInput = Strings.toByteArray("Hello World!");
+    public static final String[] CA_KEY_ALIAS = {"interCAAkey", "interCABkey"};
 
-    public static final byte[] SampleTwoBlockInput = Strings.toByteArray("Some cipher modes require more than one block");
-
-    public static final byte[] Nonce = Strings.toByteArray("number only used once");
-
-    public static final byte[] PersonalizationString = Strings.toByteArray("a constant personal marker");
-
-    public static final byte[] Initiator = Strings.toByteArray("Initiator");
-
-    public static final byte[] Recipient = Strings.toByteArray("Recipient");
-
-    public static final byte[] UKM = Strings.toByteArray("User keying material");
 }
