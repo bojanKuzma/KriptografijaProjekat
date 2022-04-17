@@ -18,5 +18,3 @@ Najprodavaniji model kompanije VW je?#Golf#Polo#Passat#Jetta#Golf
 Najprodavaniji model kompanije Mercedes-Benz je?#A klasa#B klasa#C klasa#S klasa#C klasa
 Najprodavaniji model kompanije Audi je?#A5#Q8#RS3#TT#A5
 Najprodavaniji model kompanije Porsche je?#Cayenne#Taycan#911 Carrera#Boxster#Cayenne
-
-

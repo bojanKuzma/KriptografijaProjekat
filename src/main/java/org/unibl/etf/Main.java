@@ -4,15 +4,25 @@ import org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider;
 import org.bouncycastle.operator.OperatorCreationException;
 
 import javax.crypto.SecretKey;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.*;
-import java.security.cert.*;
+import java.security.cert.CRLException;
+import java.security.cert.CertificateExpiredException;
+import java.security.cert.X509Certificate;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+
 import static org.unibl.etf.Constants.*;
 
 public class Main {
@@ -70,13 +80,19 @@ public class Main {
                         new PrivateKey[]{rootCAKeyPair.getPrivate(),interCAAkeyPair.getPrivate(),interCABkeyPair.getPrivate()}
                         );
 
-                /*  this is for saving CA's on file system
+                //creates result file
+                SecretKey aesKey = AES.defineKey(Constants.IV_KEY.getBytes());
+                String header = "KORISNIČKO_IME VRIJEME[s] REZULTAT";
+                Files.write(Path.of(RESULT_PATH), AES.ecbEncrypt(aesKey,header.getBytes()));
+                Files.createFile(Path.of(PASSWORD_FILE));
+
+                //  this is for saving CA's on file system
                 Certificate.saveToFile(interCACertA, "./Intermediate CA A.cer");
 
                 Certificate.saveToFile(interCACertB, "./Intermediate CA B.cer");
 
                 Certificate.saveToFile(rootCACert,"./rootCA.cer");
-                */
+
             } catch (Exception e) {
                 e.getStackTrace();
             }
@@ -93,7 +109,7 @@ public class Main {
                     System.out.print("Password: ");
                     String password = standardInput.readLine();
                     if(HashPassword.hash(password,true,username )) {
-                        KeyStore keyStore = KeyStoreBC.getStore(KEY_STORE_PASSWORD.toCharArray());
+                        KeyStore keyStore = KeyStoreBC.getStore();
                         try {
                             //cert.checkValidity();
 
@@ -113,15 +129,49 @@ public class Main {
                                         byte[] decoded = steganography.decode(ENCODED_PHOTO_PATH, files[key]
                                                 .replace(ENCODED_PHOTO_EXTENSION, BLANK));
                                         selectedQuestions.put(key, new String(AES.ecbDecrypt(secretKey, decoded), StandardCharsets.UTF_8));
-                                        System.out.println(new String(AES.ecbDecrypt(secretKey, decoded), StandardCharsets.UTF_8));
+                                        //System.out.println(new String(AES.ecbDecrypt(secretKey, decoded), StandardCharsets.UTF_8));
                                         i++;
                                     }
                                 }
-                                //todo mjeri vrijeme
-                                //todo ucitaj rezultate
-                                //todo dekoduj rezultate
-                                //todo ubaci novi i srotiraj
-                                //todo enkoduj i sacuvaj fajl na fajl sistem
+                                int points = 0;
+                                Instant start = Instant.now();
+                                for(String question : selectedQuestions.values()){
+                                    LinkedList<String> splicedQuestionAnswer = new LinkedList<>(List.of(question.split("#")));
+                                    if(splicedQuestionAnswer.size()<3){
+                                        System.out.println(splicedQuestionAnswer.remove());
+                                        String answer = standardInput.readLine();
+                                        if(answer.equals(splicedQuestionAnswer.remove()))
+                                            points++;
+                                    }
+                                    else {
+                                        System.out.println(splicedQuestionAnswer.remove());
+                                        System.out.println("1) " + splicedQuestionAnswer.get(0));
+                                        System.out.println("2) " + splicedQuestionAnswer.get(1));
+                                        System.out.println("3) " + splicedQuestionAnswer.get(2));
+                                        System.out.println("4) " + splicedQuestionAnswer.get(3));
+                                        String answer = standardInput.readLine();
+                                        while(!(answer.equals("1") || answer.equals("2") || answer.equals("3") || answer.equals("4"))){
+                                            System.out.println("Unesite broj ispred odgovora 1, 2, 3 ili 4");
+                                            answer = standardInput.readLine();
+                                        }
+                                        if(splicedQuestionAnswer.get(Integer.parseInt(answer)-1).equals(splicedQuestionAnswer.get(4)))
+                                            points++;
+                                    }
+                                }
+                                Instant finish = Instant.now();
+                                long timeElapsed = Duration.between(start, finish).toSeconds();
+
+                                SecretKey aesKey = AES.defineKey(Constants.IV_KEY.getBytes());
+                                byte[] encodedResults = Files.readAllBytes(Path.of(RESULT_PATH));
+                                encodedResults = AES.ecbDecrypt(aesKey,encodedResults);
+                                String result = new String(encodedResults);
+                                for (String e : result.split("#"))
+                                    System.out.println(e);
+                                System.out.println(username + " " + timeElapsed + " " + points);
+                                result += "#" + username + " " + timeElapsed + " " + points;
+                                encodedResults = AES.ecbEncrypt(aesKey,result.getBytes());
+                                Files.write(Path.of(RESULT_PATH), encodedResults);
+
                             } else throw new NullPointerException("There are no images in Encoded folder!");
                         }catch (CertificateExpiredException | CRLException e){
                             System.out.println("Certifakt je istekao");
@@ -138,7 +188,7 @@ public class Main {
                     System.out.print("Password: ");
                     String password = standardInput.readLine();
                     if(HashPassword.hash(password,false, username)) {
-                        KeyStore keyStore = KeyStoreBC.getStore(KEY_STORE_PASSWORD.toCharArray());
+                        KeyStore keyStore = KeyStoreBC.getStore();
                         int index =(int)Math.round(Math.random());
                         KeyPair endEntityKeyPair = Certificate.generateKeyPair();
 
@@ -152,8 +202,8 @@ public class Main {
                                 CACert,
                                 CAPrivateKey,
                                 endEntityKeyPair.getPublic(),
-                                username,
-                                "");
+                                username
+                        );
                         KeyStoreBC.storeCertificate(endEntityCert,username);
                         Certificate.saveToFile(endEntityCert, "./" + username + ".cer");
 

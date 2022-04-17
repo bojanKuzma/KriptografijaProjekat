@@ -62,7 +62,7 @@ public class HashPassword {
                         login_num++;
                         line = line.replaceFirst("[0-9]$", login_num + "");
                         if (login_num > 3) {
-                            KeyStore keyStore = KeyStoreBC.getStore(KEY_STORE_PASSWORD.toCharArray());
+                            KeyStore keyStore = KeyStoreBC.getStore();
                             X509Certificate cert = (X509Certificate) keyStore.getCertificate(username);
                             if (cert.getIssuerX500Principal().getName().contains("Intermediate CA A")) {
                                 X509Certificate caCert = (X509Certificate) keyStore.getCertificate(CA_CERT_ALIAS[0]);

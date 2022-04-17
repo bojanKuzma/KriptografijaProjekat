@@ -31,7 +31,7 @@ public class KeyStoreBC {
         Files.write(Path.of(STORE_PATH), byteArrayOutputStream.toByteArray());
     }
 
-    public static KeyStore getStore(char[] storePassword) throws GeneralSecurityException, IOException {
+    public static KeyStore getStore() throws GeneralSecurityException, IOException {
         KeyStore keyStore = KeyStore.getInstance("BCFKS", "BCFIPS");
         keyStore.load(new FileInputStream(STORE_PATH), KEY_STORE_PASSWORD.toCharArray());
         return keyStore;

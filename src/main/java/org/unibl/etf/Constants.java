@@ -1,10 +1,5 @@
 package org.unibl.etf;
 
-import org.bouncycastle.util.Strings;
-import org.bouncycastle.util.encoders.Hex;
-
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.File;
 
 public class Constants
@@ -72,5 +67,7 @@ public class Constants
     public static final String[] CA_CERT_ALIAS = {"interCAA", "interCAB"};
 
     public static final String[] CA_KEY_ALIAS = {"interCAAkey", "interCABkey"};
+
+    public static  final String RESULT_PATH = "." + PATH_SEPARATOR + "results.txt";
 
 }

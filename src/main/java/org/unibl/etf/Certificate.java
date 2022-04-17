@@ -1,13 +1,12 @@
 package org.unibl.etf;
 
 import org.bouncycastle.asn1.x500.X500Name;
-import org.bouncycastle.asn1.x509.*;
+import org.bouncycastle.asn1.x509.BasicConstraints;
+import org.bouncycastle.asn1.x509.CRLReason;
+import org.bouncycastle.asn1.x509.Extension;
+import org.bouncycastle.asn1.x509.KeyUsage;
 import org.bouncycastle.cert.*;
 import org.bouncycastle.cert.jcajce.*;
-import org.bouncycastle.openssl.PEMEncryptor;
-import org.bouncycastle.openssl.jcajce.JcaMiscPEMGenerator;
-import org.bouncycastle.openssl.jcajce.JcaPEMWriter;
-import org.bouncycastle.openssl.jcajce.JcePEMEncryptorBuilder;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 
@@ -15,7 +14,6 @@ import javax.security.auth.x500.X500Principal;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.math.BigInteger;
 import java.security.*;
 import java.security.cert.CertificateEncodingException;
@@ -56,16 +54,6 @@ public class Certificate {
                 .getCertificate(v1CertBldr.build(signerBuilder.build(caPrivateKey)));
     }
 
-    public static String writeCertificate(X509Certificate certificate) throws IOException {
-        StringWriter sWrt = new StringWriter();
-        PEMEncryptor encryptor =
-                new JcePEMEncryptorBuilder("AES-256-CBC").build("test".toCharArray());
-        JcaMiscPEMGenerator gen = new JcaMiscPEMGenerator(certificate, encryptor);//mozda ne treba i ne radi?
-        JcaPEMWriter pemWriter = new JcaPEMWriter(sWrt);
-        pemWriter.writeObject(gen);
-        pemWriter.close();
-        return sWrt.toString();
-    }
 
     public static void saveToFile(X509Certificate certificate, String filePath) throws IOException,
             CertificateEncodingException {
@@ -143,7 +131,7 @@ public class Certificate {
     }
 
     public static X509Certificate createEndCert(X509Certificate caCertificate, PrivateKey caPrivateKey,
-                                                PublicKey eePublicKey, String commonName, String email)
+                                                PublicKey eePublicKey, String commonName)
             throws GeneralSecurityException, CertIOException, OperatorCreationException {
         X509v3CertificateBuilder v3CertBldr = new JcaX509v3CertificateBuilder(
                 caCertificate.getSubjectX500Principal(), // issuer
